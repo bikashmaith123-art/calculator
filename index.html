@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>All-in-One Calculator Pro — v0.43</title>
+<title>All-in-One Calculator Pro — v0.44 Transparent Map Overlay</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#182536;--muted:#607083;--line:#d8e1eb;--accent:#1769aa;--soft:#e8f2fc}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;line-height:1.45}
@@ -132,12 +132,15 @@ main{max-width:900px;margin:auto;padding:14px}.tabs{display:flex;gap:8px;overflo
 <p class="hint">নিজের Google Maps JavaScript API Key দিলে ম্যাপ রিলোড ছাড়াই মসৃণভাবে চলবে, আপনার অবস্থান নীল বিন্দু ও নির্ভুলতার বৃত্তসহ দেখাবে এবং যে পথে হেঁটেছেন তার রেখা আঁকবে। Key আপনার ব্রাউজারেই থাকে। Key না দিলে ওপরের সাধারণ ম্যাপ (লাল পিন) চলবে।</p>
 <div class="gmrow"><input type="text" id="gmKey" placeholder="Google Maps API Key" style="flex:1;min-width:210px"><button class="secondary" id="gmKeyOn">▶ উন্নত ম্যাপ চালু</button><button class="secondary" id="gmKeyOff">✕ সাধারণ ম্যাপে ফিরুন</button></div></details>
 <p class="hint">লাইভ লোকেশনের জন্য ফাইলটি https বা localhost-এ (যেমন GitHub Pages) খুলতে হবে এবং ফোন/ব্রাউজারে লোকেশন চালু ও অনুমতি দেওয়া থাকতে হবে। ঘরের ভেতরে নির্ভুলতা কম দেখাতে পারে; খোলা জায়গায় ভালো আসে।</p></section>
-<section id="whitepos" class="panel"><h2>⚪ সাদা প্লেন — আমার নিজস্ব লাইভ পজিশন</h2>
+<section id="whitepos" class="panel"><h2>⚪ সাদা প্লেন — আমার নিজস্ব পজিশন ও ড্রয়িং বোর্ড</h2>
 <style>
 #whitepos .wprow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
 #whitepos .wprow button{font-size:.95rem}
+#whitepos .wprow label{display:flex;align-items:center;gap:6px}
+#whitepos .wprow input[type=checkbox]{width:auto;margin:0}
+#whitepos .wprow input[type=number],#whitepos .wprow input[type=text],#whitepos .wprow select{width:auto;min-width:0;max-width:100%}
 #wpWrap{position:relative;width:100%;height:calc(100vh - 250px);min-height:340px;max-height:78vh;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
-#wpCv{position:absolute;left:0;top:0;width:100%;height:100%;background:#fff;touch-action:none;user-select:none;-webkit-user-select:none;display:block}
+#wpCv{position:absolute;left:0;top:0;width:100%;height:100%;background:transparent;touch-action:none;user-select:none;-webkit-user-select:none;display:block}
 #wpMode{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:3}
 #wpMode button,#wpZoom button{width:46px;height:44px;border-radius:12px;border:2px solid #cfd8e3;background:#fff;color:#222;font-size:1.2rem;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 #wpMode button.on{background:#1a73e8;color:#fff;border-color:#1a73e8}
@@ -146,27 +149,38 @@ main{max-width:900px;margin:auto;padding:14px}.tabs{display:flex;gap:8px;overflo
 #wpFab small{font-size:.56rem;margin-top:1px}
 #wpFab.alert{background:#d93025}
 #wpChip{position:absolute;left:10px;bottom:14px;max-width:62%;background:rgba(255,255,255,.95);border:1px solid #cbd3dc;border-radius:10px;padding:5px 10px;font-size:.85rem;font-weight:700;z-index:3;box-shadow:0 1px 5px rgba(0,0,0,.2)}
+#whitepos .wpcard{border:1px solid var(--line);border-radius:12px;background:#f4f9ff;padding:10px 12px;margin:8px 0}
+#whitepos .wpcard h3{margin:0 0 4px;font-size:1rem}
 #wpTab table{width:100%;border-collapse:collapse;font-size:.86rem}
 #wpTab th,#wpTab td{padding:4px 5px;border-bottom:1px solid #e3e8ee;text-align:right}
 #wpTab th:first-child,#wpTab td:first-child{text-align:center}
 #wpTab td button{padding:3px 7px;font-size:.8rem}
 </style>
-<p class="hint">এখানে কোনো ম্যাপ বা ছবি নেই — শুধু সাদা পাতা। আপনার লাইভ অবস্থান নীল বিন্দুতে দেখাবে, প্রথম অবস্থান থেকে মিটারে মাপা গ্রিডসহ। গুগল ম্যাপ ও হাইব্রিড/স্যাটেলাইট আলাদা "🗺️ লাইভ ম্যাপ" ট্যাবেই আগের মতো আছে।</p>
+<p class="hint">ম্যাপ-ওভারলে কাজের বোর্ড: স্যাটেলাইট/হাইব্রিড/রোড ছবি নিচের স্তরে থাকবে; তার ওপর গ্রিড, GPS পয়েন্ট ও আপনার আঁকা রেখা দেখা যাবে। ম্যাপের স্বচ্ছতা কম-বেশি করতে নিচের স্লাইডার ব্যবহার করুন।</p>
 <div class="wprow"><button id="wpLive">📍 লাইভ লোকেশন চালু করুন</button><button class="secondary" id="wpReset">🔄 নতুন করে শুরু</button><button class="secondary" id="wpToGm">🗺️ গুগল ম্যাপ ট্যাবে যান</button></div>
-<div class="wprow"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="wpFollow" checked style="width:auto;margin:0"> চলার সঙ্গে অনুসরণ</label><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="wpGrid" checked style="width:auto;margin:0"> গ্রিড</label><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="wpTrail" checked style="width:auto;margin:0"> চলার পথ</label><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="wpLbl" checked style="width:auto;margin:0"> পয়েন্টের নাম/মাপ</label></div>
+<div class="wprow"><label><input type="checkbox" id="wpMap" checked> 🛰️ নিচে ম্যাপ দেখান</label><select id="wpMapT"><option value="sat">স্যাটেলাইট</option><option value="hyb">হাইব্রিড (নামসহ)</option><option value="road">রোড ম্যাপ</option></select><label>স্বচ্ছতা <input type="range" id="wpOp" min="20" max="100" value="100" style="width:110px"></label></div>
+<div class="wprow"><label><input type="checkbox" id="wpFollow" checked> চলার সঙ্গে অনুসরণ</label><label><input type="checkbox" id="wpGrid" checked> গ্রিড</label><label><input type="checkbox" id="wpTrail" checked> চলার পথ</label><label><input type="checkbox" id="wpLbl" checked> পয়েন্টের নাম/মাপ</label></div>
 <div id="wpWrap"><canvas id="wpCv"></canvas>
 <div id="wpZoom"><button id="wpZi" title="জুম ইন">+</button><button id="wpZo" title="জুম আউট">−</button></div>
-<div id="wpMode"><button id="wpM0" class="on" title="পাতা সরান / নিউট্রাল">✋</button><button id="wpM1" title="টাচ করলে পয়েন্ট বসবে">📍</button><button id="wpMHere" title="আমার লাইভ অবস্থানে পয়েন্ট">📍＋</button></div>
+<div id="wpMode"><button id="wpM0" class="on" title="পাতা সরান">✋</button><button id="wpM1" title="টাচ করলে পয়েন্ট বসবে">📍</button><button id="wpM2" title="আঙুলে আঁকুন">✏️</button><button id="wpMHere" title="আমার লাইভ অবস্থানে পয়েন্ট">📍＋</button></div>
 <button id="wpBig" type="button" style="position:absolute;left:50%;top:62%;transform:translateX(-50%);z-index:4;padding:14px 20px;font-size:1.05rem;border-radius:14px;display:flex">📍 লাইভ লোকেশন চালু করুন</button><div id="wpChip">📍 অবস্থান এখনো পাওয়া যায়নি</div><button id="wpFab" title="আমার অবস্থানে ফিরুন">🎯<small>আমার অবস্থান</small></button></div>
-<p class="hint">ডানদিকের বোতাম: ✋ = পাতা সরান (কিছু বসবে না) • 📍 = যেখানে চাপবেন সেখানে ক্রমিক পয়েন্ট • 📍＋ = আপনার লাইভ অবস্থানে পয়েন্ট। দুই আঙুলে জুম করুন; সরালে অনুসরণ থামে, লাল 🎯 চাপলে ফিরবেন।</p>
-<div class="gmcard" style="border:1px solid var(--line);border-radius:12px;background:#f4f9ff;padding:10px 12px;margin:8px 0"><div><b id="wpStatus">লাইভ লোকেশন বন্ধ আছে। "📍 লাইভ লোকেশন চালু করুন" চাপুন, তারপর অনুমতি চাইলে "Allow" দিন।</b></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 12px;margin-top:6px"><div><small style="display:block;color:#667">অক্ষাংশ (Latitude)</small><b id="wpLat">—</b></div><div><small style="display:block;color:#667">দ্রাঘিমাংশ (Longitude)</small><b id="wpLon">—</b></div><div><small style="display:block;color:#667">নির্ভুলতা</small><b id="wpAcc">—</b></div><div><small style="display:block;color:#667">গতি</small><b id="wpSpd">—</b></div><div><small style="display:block;color:#667">দিক</small><b id="wpHdg">—</b></div><div><small style="display:block;color:#667">প্রথম অবস্থান থেকে (পূর্ব, উত্তর)</small><b id="wpXY">—</b></div><div><small style="display:block;color:#667">চলা দূরত্ব</small><b id="wpDist">—</b></div><div><small style="display:block;color:#667">আপডেট</small><b id="wpCnt">—</b></div></div>
+<p class="hint">ডানের বোতাম: ✋ = পাতা সরান • 📍 = যেখানে চাপবেন সেখানে ক্রমিক পয়েন্ট • ✏️ = আঙুলে আঁকা (আঁকার সময় পাতা নড়বে না; দুই আঙুলে জুম/সরানো চলে) • 📍＋ = লাইভ অবস্থানে পয়েন্ট। সরালে অনুসরণ থামে, লাল 🎯 চাপলে ফিরবেন।</p>
+<div class="wpcard"><h3>📌 লাইভ ছাড়াই শুরু করুন</h3><div class="wprow"><input type="text" id="wpStart" placeholder="অক্ষাংশ,দ্রাঘিমাংশ (22.18,87.91) বা জায়গার নাম" style="flex:1;min-width:180px"><button id="wpStartBtn">📌 এখান থেকে শুরু</button></div><p class="hint" style="margin:0">এতে সাদা পাতার মূল বিন্দু (০,০) এই জায়গায় সেট হয়। লাইভ চালু না করেও ম্যাপ ও আঁকা চলবে। জায়গার নাম দিয়ে খুঁজতে ইন্টারনেট লাগবে।</p></div>
+<div class="wpcard"><div id="wpStatus" style="font-weight:700">লাইভ লোকেশন বন্ধ আছে। "📍 লাইভ লোকেশন চালু করুন" চাপুন, তারপর অনুমতি চাইলে "Allow" দিন।</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 12px;margin-top:6px"><div><small style="display:block;color:#667">অক্ষাংশ (Latitude)</small><b id="wpLat">—</b></div><div><small style="display:block;color:#667">দ্রাঘিমাংশ (Longitude)</small><b id="wpLon">—</b></div><div><small style="display:block;color:#667">নির্ভুলতা</small><b id="wpAcc">—</b></div><div><small style="display:block;color:#667">গতি</small><b id="wpSpd">—</b></div><div><small style="display:block;color:#667">দিক</small><b id="wpHdg">—</b></div><div><small style="display:block;color:#667">মূল বিন্দু থেকে (পূর্ব, উত্তর)</small><b id="wpXY">—</b></div><div><small style="display:block;color:#667">চলা দূরত্ব</small><b id="wpDist">—</b></div><div><small style="display:block;color:#667">আপডেট</small><b id="wpCnt">—</b></div></div>
 <div class="wprow"><button class="secondary" id="wpCopy">⧉ অক্ষাংশ,দ্রাঘিমাংশ কপি</button></div></div>
-<div class="gmcard" style="border:1px solid var(--line);border-radius:12px;background:#f4f9ff;padding:10px 12px;margin:8px 0"><b>📍 পয়েন্ট ও দূরত্ব</b>
+<div class="wpcard"><h3>✏️ আঁকা</h3><div class="wprow"><label>রং <input type="color" id="wpPenC" value="#ffeb3b" style="width:48px;height:34px;padding:0"></label><label>মোটা <select id="wpPenW"><option value="2">সরু</option><option value="4" selected>মাঝারি</option><option value="7">মোটা</option></select></label><button class="secondary" id="wpSUndo">↶ শেষ দাগ মুছুন</button><button class="secondary" id="wpSClear">🗑 সব আঁকা মুছুন</button></div><p class="hint" style="margin:0">ডানের ✏️ বোতাম চেপে বোর্ডে আঙুল দিয়ে আঁকুন। আঁকা দাগ জায়গার সঙ্গে আটকে থাকে, জুম/সরালে ম্যাপের সঙ্গে নড়ে।</p></div>
+<div class="wpcard"><h3>📍 পয়েন্ট ও দূরত্ব</h3>
 <div id="wpTab" style="overflow:auto;max-height:260px"></div>
-<div class="wprow"><span>দূরত্ব মাপুন:</span><select id="wpDA"></select> ↔ <select id="wpDB"></select><b id="wpDR">—</b></div><div id="wpTot" class="hint"></div>
+<div class="wprow"><span>দূরত্ব মাপুন:</span><select id="wpDA"></select> ↔ <select id="wpDB"></select><b id="wpDR">—</b></div><div id="wpTot" class="hint"></div><div id="wpArea" class="hint" style="font-weight:700"></div>
 <div class="wprow"><button class="secondary" id="wpPUndo">↶ শেষ পয়েন্ট মুছুন</button><button class="secondary" id="wpPClear">🗑 সব পয়েন্ট মুছুন</button><button class="secondary" id="wpPCopy">⧉ কোঅর্ডিনেট কপি (CSV)</button><button class="secondary" id="wpPDl">⬇ CSV ডাউনলোড</button></div></div>
-<p class="hint">লাইভ লোকেশনের জন্য ফাইলটি https বা localhost-এ (যেমন GitHub Pages) খুলতে হবে এবং ফোনে লোকেশন চালু ও অনুমতি দেওয়া থাকতে হবে। এই সাদা পাতার মাপ GPS থেকে সরাসরি হিসাব করা সমতল মাপ; কয়েক শ মিটারের মধ্যে যথেষ্ট নির্ভুল।</p></section>
+<div class="wpcard"><h3>⭕ দুই জায়গা থেকে বৃত্তচাপ কেটে নতুন পজিশন</h3><p class="hint" style="margin:0 0 6px">দুটি পয়েন্ট বাছুন, প্রতিটি থেকে নতুন জায়গার দূরত্ব দিন। দুই বৃত্তের ছেদবিন্দু নতুন কোঅর্ডিনেট হিসেবে পয়েন্ট তালিকায় যোগ হবে।</p>
+<div class="wprow"><label>পয়েন্ট A <select id="wpIA"></select></label><label>A থেকে দূরত্ব <input type="number" id="wpDa" step="any" min="0" style="width:90px"></label></div>
+<div class="wprow"><label>পয়েন্ট B <select id="wpIB"></select></label><label>B থেকে দূরত্ব <input type="number" id="wpDb" step="any" min="0" style="width:90px"></label></div>
+<div class="wprow"><label>একক <select id="wpIU"><option value="1">মিটার</option><option value="0.3048">ফুট</option></select></label><label>কোন পাশে <select id="wpIS"><option value="both">দুটোই</option><option value="L">A→B এর বাঁ দিকে</option><option value="R">A→B এর ডান দিকে</option></select></label><button id="wpIGo">🔍 ছেদবিন্দু বের করুন</button></div><div id="wpIR" class="hint" style="font-weight:700"></div></div>
+<div class="wpcard"><h3>🧭 দূরত্ব ও দিক থেকে নতুন পয়েন্ট</h3><div class="wprow"><label>শুরুর পয়েন্ট <select id="wpPA"></select></label><label>দূরত্ব <input type="number" id="wpPd" step="any" min="0" style="width:90px"></label><label>একক <select id="wpPU"><option value="1">মিটার</option><option value="0.3048">ফুট</option></select></label><label>দিক (উত্তর থেকে ঘড়ির কাঁটার দিকে °) <input type="number" id="wpPb" step="any" style="width:80px"></label><button id="wpPGo">➕ পয়েন্ট যোগ</button></div></div>
+<div class="wpcard"><h3>⭕ বৃত্ত আঁকুন</h3><div class="wprow"><label>কেন্দ্র <select id="wpCA"></select></label><label>ব্যাসার্ধ <input type="number" id="wpCr" step="any" min="0" style="width:90px"></label><label>একক <select id="wpCU"><option value="1">মিটার</option><option value="0.3048">ফুট</option></select></label><button id="wpCGo">⭕ বৃত্ত আঁকুন</button><button class="secondary" id="wpCClr">🗑 সব বৃত্ত মুছুন</button></div></div>
+<p class="hint">লাইভ লোকেশনের জন্য ফাইলটি https-এ (GitHub Pages) খুলতে হবে ও ফোনের লোকেশন চালু থাকতে হবে। পয়েন্ট, আঁকা ও বৃত্ত এই ফোনের ব্রাউজারে নিজে থেকে সেভ থাকে। সমতল মাপ GPS থেকে সরাসরি হিসাব করা, কয়েক শ মিটারের মধ্যে যথেষ্ট নির্ভুল। কাঠা = ৭২০ বর্গফুট ধরা হয়েছে (এলাকাভেদে ভিন্ন হতে পারে)।</p></section>
 
 <section id="scalepaper" class="panel"><h2>স্কেল ও কাগজের মাপ</h2>
 <h3>১. স্কেল</h3>
@@ -1937,48 +1951,78 @@ window.__gm={start,stop};
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const cv=$('wpCv'),ctx=cv.getContext('2d'),RAD=Math.PI/180,R=6371000;
-let boardMsg='',autoTried=false,lowAcc=false,fixTimer=null,org=null,wid=null,last=null,trail=[],pts=[],ppm=8,cx=0,cy=0,follow=true,mode=0,cnt=0,dist=0,prev=null;
+const cv=$('wpCv'),ctx=cv.getContext('2d'),RAD=Math.PI/180,R=6371000,KEY='wpSaveV1';
+let boardMsg='',autoTried=false,lowAcc=false,fixTimer=null,org=null,wid=null,last=null,trail=[],pts=[],strokes=[],circles=[],ppm=8,cx=0,cy=0,follow=true,mode=0,cnt=0,dist=0,prev=null,raf=0,curS=null;
 const fx=(v,n)=>v==null||isNaN(v)?'—':(+v).toFixed(n);
 const dirName=d=>d==null||isNaN(d)?'—':Math.round(d)+'° '+['উত্তর','উত্তর-পূর্ব','পূর্ব','দক্ষিণ-পূর্ব','দক্ষিণ','দক্ষিণ-পশ্চিম','পশ্চিম','উত্তর-পশ্চিম'][Math.round(d/45)%8];
 const hav=(a,b)=>{const t=RAD,dl=(b.lat-a.lat)*t,dn=(b.lon-a.lon)*t,x=Math.sin(dl/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const fd=m=>m<1000?fx(m,2)+' মি. ('+fx(m/.3048,2)+' ফুট)':fx(m/1000,3)+' কিমি';
 const toXY=(lat,lon)=>({x:R*(lon-org.lon)*RAD*Math.cos(org.lat*RAD),y:R*(lat-org.lat)*RAD});
 const toLL=(x,y)=>({lat:org.lat+y/R/RAD,lon:org.lon+x/(R*RAD*Math.cos(org.lat*RAD))});
+const sd=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;draw()})};
 function msg(t){$('wpStatus').textContent=t}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({org,pts,strokes,circles}))}catch(e){}}
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.org){org=j.org;pts=j.pts||[];strokes=j.strokes||[];circles=j.circles||[];cx=0;cy=0;follow=false;$('wpFollow').checked=false}}catch(e){}}
 function sz(){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1,w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}return{w:r.width,h:r.height,d}}
 const s2w=(px,py,S)=>({x:cx+(px-S.w/2)/ppm,y:cy-(py-S.h/2)/ppm});
 const w2s=(x,y,S)=>({x:S.w/2+(x-cx)*ppm,y:S.h/2-(y-cy)*ppm});
 const STEPS=[];for(let e=-2;e<=5;e++)[1,2,5].forEach(m=>STEPS.push(m*Math.pow(10,e)));
+// ---- ম্যাপ টাইল ----
+const ES='https://server.arcgisonline.com/ArcGIS/rest/services/';
+const TL={sat:ES+'World_Imagery/MapServer/tile/{z}/{y}/{x}',lab:ES+'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',road:'https://tile.openstreetmap.org/{z}/{x}/{y}.png'};
+const tc=new Map();
+function tile(layer,z,x,y){const k=layer+z+'/'+x+'/'+y;let t=tc.get(k);if(!t){if(tc.size>500)tc.delete(tc.keys().next().value);const im=new Image();t={im,ok:false};im.onload=()=>{t.ok=true;sd()};im.onerror=()=>{t.bad=true};im.src=TL[layer].replace('{z}',z).replace('{x}',x).replace('{y}',y);tc.set(k,t)}return t}
+const lon2x=(lo,n)=>Math.floor((lo+180)/360*n),lat2y=(la,n)=>Math.floor((1-Math.log(Math.tan(la*RAD)+1/Math.cos(la*RAD))/Math.PI)/2*n);
+const x2lon=(x,n)=>x/n*360-180,y2lat=(y,n)=>Math.atan(Math.sinh(Math.PI*(1-2*y/n)))/RAD;
+function drawTiles(S){
+ const t=$('wpMapT').value,layers=t==='sat'?['sat']:t==='hyb'?['sat','lab']:['road'],maxZ=t==='road'?19:18;
+ const c=toLL(cx,cy);let z=Math.round(Math.log2(156543.03392*Math.cos(c.lat*RAD)*ppm));z=Math.max(2,Math.min(maxZ,z));
+ const a=toLL(cx-S.w/2/ppm,cy+S.h/2/ppm),b=toLL(cx+S.w/2/ppm,cy-S.h/2/ppm);
+ let x0,x1,y0,y1,n;for(;;){n=Math.pow(2,z);x0=lon2x(a.lon,n);x1=lon2x(b.lon,n);y0=lat2y(Math.min(85,a.lat),n);y1=lat2y(Math.max(-85,b.lat),n);if((x1-x0+1)*(y1-y0+1)<=80||z<=2)break;z--}
+ ctx.save();ctx.globalAlpha=(+$('wpOp').value||100)/100;
+ layers.forEach((ly,li)=>{if(li)ctx.globalAlpha=1;for(let X=x0;X<=x1;X++)for(let Y=y0;Y<=y1;Y++){const xx=((X%n)+n)%n,tl=tile(ly,z,xx,Y);if(!tl.ok)continue;const nw=toXY(y2lat(Y,n),x2lon(X,n)),se=toXY(y2lat(Y+1,n),x2lon(X+1,n)),p=w2s(nw.x,nw.y,S),q=w2s(se.x,se.y,S);ctx.drawImage(tl.im,p.x,p.y,q.x-p.x+.7,q.y-p.y+.7)}});
+ ctx.restore();
+}
+function halo(t,x,y,fill){ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(t,x,y);ctx.fillStyle=fill;ctx.fillText(t,x,y)}
 function draw(){
- const S=sz();ctx.setTransform(S.d,0,0,S.d,0,0);ctx.fillStyle='#fff';ctx.fillRect(0,0,S.w,S.h);ctx.font='11px system-ui,sans-serif';
- if($('wpGrid').checked){
+ const S=sz();ctx.setTransform(S.d,0,0,S.d,0,0);
+ const mapOn=!!(org&&$('wpMap').checked);
+ // ম্যাপ চালু থাকলে ক্যানভাস সাদা দিয়ে ঢেকে দেবেন না: আগে imagery, পরে grid/GPS/drawing।
+ ctx.clearRect(0,0,S.w,S.h);
+ if(!mapOn){ctx.fillStyle='#fff';ctx.fillRect(0,0,S.w,S.h);}
+ ctx.font='11px system-ui,sans-serif';
+ if(mapOn)drawTiles(S);
+ if($('wpGrid').checked&&org){
   let st=STEPS.find(s=>s*ppm>=60)||STEPS[STEPS.length-1];
-  const x0=cx-S.w/2/ppm,x1=cx+S.w/2/ppm,y0=cy-S.h/2/ppm,y1=cy+S.h/2/ppm;
-  ctx.lineWidth=1;ctx.textBaseline='bottom';ctx.fillStyle='#8a97a6';
-  for(let x=Math.floor(x0/st)*st,n=0;x<=x1&&n<300;x+=st,n++){const p=w2s(x,0,S).x;ctx.strokeStyle=Math.abs(x)<st/1e3?'#9aa7b5':'#e6ebf1';ctx.beginPath();ctx.moveTo(p,0);ctx.lineTo(p,S.h);ctx.stroke();if(org)ctx.fillText((+x.toFixed(2))+' মি',p+3,S.h-3)}
+  const x0=cx-S.w/2/ppm,x1=cx+S.w/2/ppm,y0=cy-S.h/2/ppm,y1=cy+S.h/2/ppm,gl=mapOn?'rgba(255,255,255,.42)':'#e6ebf1',ga=mapOn?'rgba(255,235,59,.9)':'#9aa7b5';
+  ctx.lineWidth=1;ctx.textBaseline='bottom';
+  for(let x=Math.floor(x0/st)*st,n=0;x<=x1&&n<300;x+=st,n++){const p=w2s(x,0,S).x;ctx.strokeStyle=Math.abs(x)<st/1e3?ga:gl;ctx.beginPath();ctx.moveTo(p,0);ctx.lineTo(p,S.h);ctx.stroke();const t=(+x.toFixed(2))+' মি';if(mapOn)halo(t,p+3,S.h-3,'#fff');else{ctx.fillStyle='#8a97a6';ctx.fillText(t,p+3,S.h-3)}}
   ctx.textBaseline='top';
-  for(let y=Math.floor(y0/st)*st,n=0;y<=y1&&n<300;y+=st,n++){const p=w2s(0,y,S).y;ctx.strokeStyle=Math.abs(y)<st/1e3?'#9aa7b5':'#e6ebf1';ctx.beginPath();ctx.moveTo(0,p);ctx.lineTo(S.w,p);ctx.stroke();if(org)ctx.fillText((+y.toFixed(2))+' মি',3,p+2)}
+  for(let y=Math.floor(y0/st)*st,n=0;y<=y1&&n<300;y+=st,n++){const p=w2s(0,y,S).y;ctx.strokeStyle=Math.abs(y)<st/1e3?ga:gl;ctx.beginPath();ctx.moveTo(0,p);ctx.lineTo(S.w,p);ctx.stroke();const t=(+y.toFixed(2))+' মি';if(mapOn)halo(t,3,p+2,'#fff');else{ctx.fillStyle='#8a97a6';ctx.fillText(t,3,p+2)}}
  }
- if(!org){ctx.fillStyle='#8a97a6';ctx.font='15px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const lines=(boardMsg||'সাদা পাতা — নিচের বোতামে লাইভ লোকেশন চালু করুন').split('\n');lines.forEach((t,i)=>ctx.fillText(t,S.w/2,S.h/2-40+i*22));ctx.textAlign='left';return}
- if($('wpTrail').checked&&trail.length>1){ctx.strokeStyle='#e8710a';ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();trail.forEach((q,i)=>{const p=w2s(q.x,q.y,S);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.stroke()}
- if(pts.length>1){ctx.strokeStyle='rgba(217,48,37,.55)';ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.beginPath();pts.forEach((q,i)=>{const m=toXY(q.lat,q.lon),p=w2s(m.x,m.y,S);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.stroke();ctx.setLineDash([])}
+ if(!org){ctx.fillStyle='#8a97a6';ctx.font='15px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const lines=(boardMsg||'সাদা পাতা — নিচের বোতামে লাইভ লোকেশন চালু করুন,\nঅথবা নিচের "লাইভ ছাড়াই শুরু" ঘরে জায়গা দিন').split('\n');lines.forEach((t,i)=>ctx.fillText(t,S.w/2,S.h/2-40+i*22));ctx.textAlign='left';return}
+ // বৃত্ত
+ circles.forEach(c=>{const m=toXY(c.lat,c.lon),p=w2s(m.x,m.y,S);ctx.strokeStyle=c.c||'#e91e63';ctx.lineWidth=2;ctx.setLineDash([7,5]);ctx.beginPath();ctx.arc(p.x,p.y,Math.max(1,c.r*ppm),0,7);ctx.stroke();ctx.setLineDash([])});
+ // আঁকা
+ ctx.lineJoin='round';ctx.lineCap='round';
+ strokes.forEach(s=>{if(!s.p.length)return;ctx.strokeStyle=s.c;ctx.lineWidth=s.w;ctx.beginPath();s.p.forEach((q,i)=>{const m=toXY(q[0],q[1]),p=w2s(m.x,m.y,S);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});if(s.p.length===1)ctx.lineTo(w2s(toXY(s.p[0][0],s.p[0][1]).x,toXY(s.p[0][0],s.p[0][1]).y,S).x+.1,w2s(toXY(s.p[0][0],s.p[0][1]).x,toXY(s.p[0][0],s.p[0][1]).y,S).y);ctx.stroke()});
+ if($('wpTrail').checked&&trail.length>1){ctx.strokeStyle='#e8710a';ctx.lineWidth=3;ctx.beginPath();trail.forEach((q,i)=>{const p=w2s(q.x,q.y,S);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.stroke()}
+ if(pts.length>1){ctx.strokeStyle='rgba(255,64,48,.85)';ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.beginPath();pts.forEach((q,i)=>{const m=toXY(q.lat,q.lon),p=w2s(m.x,m.y,S);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});if(pts.length>2)ctx.closePath();ctx.stroke();ctx.setLineDash([])}
  pts.forEach((q,i)=>{const m=toXY(q.lat,q.lon),p=w2s(m.x,m.y,S);ctx.fillStyle='#d93025';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,12,0,7);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 12px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(i+1,p.x,p.y+1);ctx.textAlign='left';
-  if($('wpLbl').checked){const t=(i+1)+': '+fx(q.lat,6)+', '+fx(q.lon,6)+(i?'  ('+fd(hav(pts[i-1],q)).split(' (')[0]+' আগেরটি থেকে)':'');ctx.font='11px system-ui,sans-serif';const w=ctx.measureText(t).width+10;ctx.fillStyle='rgba(255,255,255,.93)';ctx.strokeStyle='#cbd3dc';ctx.lineWidth=1;ctx.fillRect(p.x+15,p.y-9,w,18);ctx.strokeRect(p.x+15,p.y-9,w,18);ctx.fillStyle='#222';ctx.textBaseline='middle';ctx.fillText(t,p.x+20,p.y)}});
+  if($('wpLbl').checked){const t=(i+1)+(q.name?' '+q.name:'')+': '+fx(q.lat,6)+', '+fx(q.lon,6)+(i?'  ('+fd(hav(pts[i-1],q)).split(' (')[0]+' আগেরটি থেকে)':'');ctx.font='11px system-ui,sans-serif';const w=ctx.measureText(t).width+10;ctx.fillStyle='rgba(255,255,255,.93)';ctx.strokeStyle='#cbd3dc';ctx.lineWidth=1;ctx.fillRect(p.x+15,p.y-9,w,18);ctx.strokeRect(p.x+15,p.y-9,w,18);ctx.fillStyle='#222';ctx.textBaseline='middle';ctx.fillText(t,p.x+20,p.y)}});
  if(last){const m=toXY(last.lat,last.lon),p=w2s(m.x,m.y,S);
   if(last.acc!=null){const r=Math.max(14,Math.min(600,last.acc*ppm));ctx.fillStyle='rgba(26,115,232,.14)';ctx.strokeStyle='rgba(26,115,232,.5)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,r,0,7);ctx.fill();ctx.stroke()}
-  if(last.hdg!=null&&!isNaN(last.hdg)&&last.spd>0.5){const a=last.hdg*RAD;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(a);ctx.fillStyle='#1a73e8';ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(-8,-12);ctx.lineTo(8,-12);ctx.closePath();ctx.fill();ctx.restore()}
+  if(last.hdg!=null&&!isNaN(last.hdg)&&last.spd>0.5){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(last.hdg*RAD);ctx.fillStyle='#1a73e8';ctx.beginPath();ctx.moveTo(0,-26);ctx.lineTo(-8,-12);ctx.lineTo(8,-12);ctx.closePath();ctx.fill();ctx.restore()}
   ctx.fillStyle='rgba(26,115,232,.28)';ctx.beginPath();ctx.arc(p.x,p.y,20,0,7);ctx.fill();ctx.fillStyle='#1a73e8';ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p.x,p.y,11,0,7);ctx.fill();ctx.stroke()}
- // north arrow
- ctx.fillStyle='#4a5a6b';ctx.strokeStyle='#4a5a6b';ctx.lineWidth=2;const nx=S.w/2,ny=14;ctx.beginPath();ctx.moveTo(nx,ny);ctx.lineTo(nx-6,ny+16);ctx.lineTo(nx+6,ny+16);ctx.closePath();ctx.fill();ctx.font='bold 12px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('উ',nx,ny+18);ctx.textAlign='left';
- // scale bar
- {const st=STEPS.find(s=>s*ppm>=70)||STEPS[STEPS.length-1],len=st*ppm,bx=S.w-len-84,by=S.h-92;ctx.strokeStyle='#222';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(bx,by-5);ctx.lineTo(bx,by);ctx.lineTo(bx+len,by);ctx.lineTo(bx+len,by-5);ctx.stroke();ctx.fillStyle='#222';ctx.font='12px system-ui,sans-serif';ctx.textBaseline='bottom';ctx.fillText((st<1?st:st)+' মি',bx,by-7)}
+ ctx.fillStyle=mapOn?'#fff':'#4a5a6b';ctx.strokeStyle=mapOn?'#fff':'#4a5a6b';ctx.lineWidth=2;const nx=S.w/2,ny=14;ctx.beginPath();ctx.moveTo(nx,ny);ctx.lineTo(nx-6,ny+16);ctx.lineTo(nx+6,ny+16);ctx.closePath();ctx.fill();ctx.font='bold 12px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';if(mapOn)halo('উ',nx,ny+18,'#fff');else ctx.fillText('উ',nx,ny+18);ctx.textAlign='left';
+ {const st=STEPS.find(s=>s*ppm>=70)||STEPS[STEPS.length-1],len=st*ppm,bx=S.w-len-84,by=S.h-92;ctx.strokeStyle=mapOn?'#fff':'#222';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(bx,by-5);ctx.lineTo(bx,by);ctx.lineTo(bx+len,by);ctx.lineTo(bx+len,by-5);ctx.stroke();ctx.font='12px system-ui,sans-serif';ctx.textBaseline='bottom';if(mapOn)halo(st+' মি',bx,by-7,'#fff');else{ctx.fillStyle='#222';ctx.fillText(st+' মি',bx,by-7)}}
+ if(mapOn){ctx.font='10px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';halo($('wpMapT').value==='road'?'© OpenStreetMap':'Imagery © Esri',S.w/2,S.h-3,'#fff');ctx.textAlign='left'}
 }
 function setFab(){const f=$('wpFab');f.classList.toggle('alert',!follow&&wid!=null);f.querySelector('small').textContent=(!follow&&wid!=null)?'ফিরে আসুন':'আমার অবস্থান'}
 function recenter(){follow=true;$('wpFollow').checked=true;setFab();if(last&&org){const m=toXY(last.lat,last.lon);cx=m.x;cy=m.y;draw();msg(wid!=null?'🎯 আপনার বর্তমান অবস্থানে ফিরে এসেছে — লাইভ চলছে':'📍 আপনার শেষ জানা অবস্থান দেখানো হয়েছে।');return}if(wid==null)start()}
 function unfollow(){if(follow){follow=false;$('wpFollow').checked=false;setFab()}}
 function onPos(p){const c=p.coords,cur={lat:c.latitude,lon:c.longitude};cnt++;boardMsg='';clearTimeout(fixTimer);$('wpBig').style.display='none';
- if(!org){org={lat:cur.lat,lon:cur.lon};cx=0;cy=0}
+ if(!org){org={lat:cur.lat,lon:cur.lon};cx=0;cy=0;save()}
  if(prev){const d=hav(prev,cur);if(d>Math.max(3,(c.accuracy||0)/2))dist+=d}if(!prev||hav(prev,cur)>Math.max(3,(c.accuracy||0)/2))prev=cur;
  last={lat:cur.lat,lon:cur.lon,acc:c.accuracy,spd:c.speed,hdg:c.heading,t:p.timestamp};
  const m=toXY(cur.lat,cur.lon),tl=trail[trail.length-1];if(!tl||Math.hypot(m.x-tl.x,m.y-tl.y)>=Math.max(1,(c.accuracy||0)*.3)){trail.push(m);if(trail.length>5000)trail.shift()}
@@ -1988,65 +2032,106 @@ function onPos(p){const c=p.coords,cur={lat:c.latitude,lon:c.longitude};cnt++;bo
  $('wpXY').textContent=fx(m.x,2)+' মি, '+fx(m.y,2)+' মি';$('wpDist').textContent=dist<1000?fx(dist,0)+' মিটার':fx(dist/1000,2)+' কিমি';$('wpCnt').textContent=cnt+' বার';
  $('wpChip').textContent='📍 '+fx(cur.lat,6)+', '+fx(cur.lon,6)+(c.accuracy!=null?' (± '+fx(c.accuracy,0)+' মি.)':'');
  msg('📡 লাইভ চলছে — আপনার বর্তমান অবস্থান সাদা পাতায় দেখানো হচ্ছে');draw();renderPts()}
-function onErr(e){const m={1:(window.isSecureContext===false?'⛔ এই ফাইলটি নিরাপদ (https) ঠিকানায় খোলা হয়নি (এখন ফাইল/content:// থেকে খোলা), তাই Chrome অনুমতি চাওয়ার বাক্সই দেখায় না।\nসমাধান: ফাইলটি GitHub Pages-এ আপলোড করে\nhttps://… লিংকে খুলুন।':'লোকেশনের অনুমতি দেওয়া হয়নি।\nব্রাউজার/ফোনের সেটিংসে এই সাইটের জন্য\nLocation "Allow" করে পাতা রিলোড করুন।'),2:'অবস্থান পাওয়া যাচ্ছে না।\nফোনের GPS/Location চালু করে\nখোলা জায়গায় আবার চেষ্টা করুন।',3:'অবস্থান পেতে বেশি সময় লাগছে...'};
+function onErr(e){const m={1:(window.isSecureContext===false?'⛔ এই ফাইলটি নিরাপদ (https) ঠিকানায় খোলা হয়নি, তাই Chrome অনুমতি চাওয়ার বাক্সই দেখায় না।\nসমাধান: GitHub Pages-এর https:// লিংকে খুলুন।':'লোকেশনের অনুমতি দেওয়া হয়নি।\nব্রাউজার/ফোনের সেটিংসে এই সাইটের জন্য\nLocation "Allow" করে পাতা রিলোড করুন।'),2:'অবস্থান পাওয়া যাচ্ছে না।\nফোনের GPS/Location চালু করে\nখোলা জায়গায় আবার চেষ্টা করুন।',3:'অবস্থান পেতে বেশি সময় লাগছে...'};
  if((e.code===2||e.code===3)&&!lowAcc&&wid!=null){lowAcc=true;navigator.geolocation.clearWatch(wid);wid=null;boardMsg='সঠিক GPS পেতে দেরি হচ্ছে —\nসাধারণ (নেটওয়ার্ক) অবস্থান খোঁজা হচ্ছে...';msg('⚠️ GPS ধীর — নেটওয়ার্ক অবস্থান দিয়ে চেষ্টা চলছে...');draw();begin(false);return}
  boardMsg=m[e.code]||('লোকেশন ত্রুটি: '+e.message);msg('⚠️ '+boardMsg.replace(/\n/g,' '));if(e.code===1)stop(true);else{$('wpBig').style.display='flex'}draw()}
 function begin(hi){wid=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:hi,maximumAge:hi?1000:30000,timeout:hi?15000:30000});setFab()}
 function start(){if(!navigator.geolocation){boardMsg='এই ব্রাউজারে লোকেশন সুবিধা নেই।\nChrome/Safari-তে খুলুন।';msg('⚠️ এই ব্রাউজারে লোকেশন সুবিধা নেই।');draw();return}
  if(wid!=null)return;lowAcc=false;
- if(window.isSecureContext===false||location.protocol==='content:'){boardMsg='⛔ এই ফাইলটি নিরাপদ (https) ঠিকানায় খোলা হয়নি (এখন ফাইল/content:// থেকে খোলা), তাই Chrome অনুমতি চাওয়ার বাক্সই দেখায় না।\nসমাধান: ফাইলটি GitHub Pages-এ আপলোড করে\nhttps://… লিংকে খুলুন।';msg('⛔ নিরাপদ (https) ঠিকানা ছাড়া ব্রাউজার লোকেশন দেয় না — GitHub Pages-এর লিংকে খুলুন।');$('wpBig').style.display='flex';draw();return}
- const risky=location.protocol==='file:'||(location.protocol==='http:'&&!/^(localhost|127\.)/.test(location.hostname));
- boardMsg='📡 অবস্থান খোঁজা হচ্ছে...\nঅনুমতি চাইলে "Allow" দিন।'+(risky?'\n⚠️ ফাইলটি https-এ (GitHub Pages) না খুললে\nব্রাউজার লোকেশন আটকে দিতে পারে।':'');
+ if(window.isSecureContext===false||location.protocol==='content:'){boardMsg='⛔ এই ফাইলটি নিরাপদ (https) ঠিকানায় খোলা হয়নি।\nসমাধান: GitHub Pages-এর https:// লিংকে খুলুন।';msg('⛔ নিরাপদ (https) ঠিকানা ছাড়া ব্রাউজার লোকেশন দেয় না — GitHub Pages-এর লিংকে খুলুন।');$('wpBig').style.display='flex';draw();return}
+ if(!org)boardMsg='📡 অবস্থান খোঁজা হচ্ছে...\nঅনুমতি চাইলে "Allow" দিন।';
  msg('অবস্থান খোঁজা হচ্ছে... অনুমতি চাইলে "Allow" দিন।');$('wpBig').style.display='none';draw();
  begin(true);$('wpLive').textContent='⏹ লাইভ লোকেশন বন্ধ করুন';$('wpLive').classList.add('secondary');
- clearTimeout(fixTimer);fixTimer=setTimeout(()=>{if(!last&&wid!=null){boardMsg='এখনো অবস্থান পাওয়া যায়নি।\nফোনের Location চালু আছে কিনা দেখুন,\nখোলা জায়গায় যান; অনুমতি "Allow" দিন।';draw()}},12000)}
-function stop(q){clearTimeout(fixTimer);if(wid!=null){navigator.geolocation.clearWatch(wid);wid=null}if(!last)$('wpBig').style.display='flex';$('wpLive').textContent='📍 লাইভ লোকেশন চালু করুন';$('wpLive').classList.remove('secondary');if(!q)msg('লাইভ লোকেশন বন্ধ করা হয়েছে।');setFab()}
+ clearTimeout(fixTimer);fixTimer=setTimeout(()=>{if(!last&&wid!=null){if(!org)boardMsg='এখনো অবস্থান পাওয়া যায়নি।\nফোনের Location চালু আছে কিনা দেখুন,\nখোলা জায়গায় যান; অনুমতি "Allow" দিন।';msg('⏳ এখনো অবস্থান পাওয়া যায়নি — Location চালু ও অনুমতি "Allow" আছে কিনা দেখুন।');draw()}},12000)}
+function stop(q){clearTimeout(fixTimer);if(wid!=null){navigator.geolocation.clearWatch(wid);wid=null}if(!last&&!org)$('wpBig').style.display='flex';$('wpLive').textContent='📍 লাইভ লোকেশন চালু করুন';$('wpLive').classList.remove('secondary');if(!q)msg('লাইভ লোকেশন বন্ধ করা হয়েছে।');setFab()}
 $('wpLive').onclick=()=>{wid==null?start():stop()};$('wpBig').onclick=start;
-$('wpReset').onclick=()=>{if((pts.length||trail.length)&&!confirm('চলার পথ, পয়েন্ট ও প্রথম অবস্থান মুছে নতুন করে শুরু করবেন?'))return;org=null;last=null;boardMsg='';trail=[];pts=[];cnt=0;dist=0;prev=null;cx=0;cy=0;follow=true;$('wpFollow').checked=true;['wpLat','wpLon','wpAcc','wpSpd','wpHdg','wpXY','wpDist','wpCnt'].forEach(i=>$(i).textContent='—');$('wpChip').textContent='📍 অবস্থান এখনো পাওয়া যায়নি';renderPts();setFab();draw();msg(wid!=null?'নতুন করে শুরু হয়েছে — পরের অবস্থানটি হবে নতুন মূল বিন্দু।':'নতুন করে শুরু হয়েছে।')};
+$('wpReset').onclick=()=>{if((pts.length||trail.length||strokes.length||circles.length||org)&&!confirm('সব পয়েন্ট, আঁকা, বৃত্ত ও মূল বিন্দু মুছে নতুন করে শুরু করবেন?'))return;org=null;last=null;boardMsg='';trail=[];pts=[];strokes=[];circles=[];cnt=0;dist=0;prev=null;cx=0;cy=0;follow=true;$('wpFollow').checked=true;try{localStorage.removeItem(KEY)}catch(e){}['wpLat','wpLon','wpAcc','wpSpd','wpHdg','wpXY','wpDist','wpCnt'].forEach(i=>$(i).textContent='—');$('wpChip').textContent='📍 অবস্থান এখনো পাওয়া যায়নি';if(wid==null)$('wpBig').style.display='flex';renderPts();setFab();draw();msg('নতুন করে শুরু হয়েছে।')};
 $('wpToGm').onclick=()=>document.querySelector('.tabs button[data-tab=gmap]').click();
 $('wpFab').onclick=recenter;
 $('wpFollow').onchange=()=>{if($('wpFollow').checked)recenter();else{follow=false;setFab()}};
-['wpGrid','wpTrail','wpLbl'].forEach(i=>$(i).onchange=draw);
+['wpGrid','wpTrail','wpLbl','wpMap','wpMapT'].forEach(i=>$(i).onchange=draw);$('wpOp').oninput=draw;
 $('wpCopy').onclick=async()=>{if(!last){msg('আগে লাইভ লোকেশন চালু করুন।');return}const t=last.lat.toFixed(6)+','+last.lon.toFixed(6);try{await navigator.clipboard.writeText(t);msg('কপি হয়েছে: '+t)}catch(e){prompt('কপি করুন:',t)}};
-// zoom / pan
+// লাইভ ছাড়া শুরু
+async function startAt(){const q=$('wpStart').value.trim();if(!q){msg('জায়গার নাম বা অক্ষাংশ,দ্রাঘিমাংশ লিখুন।');return}
+ const m=q.match(/^\s*(-?\d+(?:\.\d+)?)\s*[,\s]\s*(-?\d+(?:\.\d+)?)\s*$/);let la,lo;
+ if(m){la=+m[1];lo=+m[2]}else{msg('🔎 "'+q+'" খোঁজা হচ্ছে...');try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=bn&q='+encodeURIComponent(q)),j=await r.json();if(!j||!j[0]){msg('⚠️ স্থান পাওয়া যায়নি — অন্য নামে বা অক্ষাংশ,দ্রাঘিমাংশ দিয়ে চেষ্টা করুন।');return}la=+j[0].lat;lo=+j[0].lon}catch(e){msg('⚠️ খোঁজা যায়নি — ইন্টারনেট দেখুন, অথবা অক্ষাংশ,দ্রাঘিমাংশ লিখুন।');return}}
+ if(!(Math.abs(la)<=85&&Math.abs(lo)<=180)){msg('⚠️ কোঅর্ডিনেট সঠিক নয়।');return}
+ if(org&&(pts.length||strokes.length||circles.length)&&!confirm('মূল বিন্দু বদলালে আগের পয়েন্ট/আঁকা/বৃত্ত মুছে যাবে। এগোবেন?'))return;
+ org={lat:la,lon:lo};pts=[];strokes=[];circles=[];trail=[];cx=0;cy=0;follow=false;$('wpFollow').checked=false;if(last){const t=toXY(last.lat,last.lon);}ppm=Math.max(ppm,8);boardMsg='';$('wpBig').style.display='none';save();renderPts();setFab();draw();msg('📌 মূল বিন্দু সেট হয়েছে: '+fx(la,6)+', '+fx(lo,6)+(m?'':' — ম্যাপ চালু করে ছবি দেখুন।'))}
+$('wpStartBtn').onclick=startAt;
+// জুম / সরানো / আঁকা
 function zoomAt(f,px,py){const S=sz(),w=s2w(px,py,S);ppm=Math.max(.02,Math.min(2000,ppm*f));cx=w.x-(px-S.w/2)/ppm;cy=w.y+(py-S.h/2)/ppm;draw()}
 $('wpZi').onclick=()=>{const S=sz();zoomAt(1.6,S.w/2,S.h/2)};$('wpZo').onclick=()=>{const S=sz();zoomAt(1/1.6,S.w/2,S.h/2)};
 cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(e.deltaY<0?1.2:1/1.2,e.clientX-r.left,e.clientY-r.top)},{passive:false});
 const ptr=new Map();let moved=0,pinch=0;
-cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;if(ptr.size===2){const a=[...ptr.values()];pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
+const pen=e=>{const r=cv.getBoundingClientRect(),S=sz(),w=s2w(e.clientX-r.left,e.clientY-r.top,S),l=toLL(w.x,w.y);return[+l.lat.toFixed(7),+l.lon.toFixed(7)]};
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY});moved=0;
+ if(ptr.size===2){const a=[...ptr.values()];pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(curS){strokes.pop();curS=null}}
+ else if(mode===2&&org){curS={c:$('wpPenC').value,w:+$('wpPenW').value,p:[pen(e)]};strokes.push(curS);draw()}});
 cv.addEventListener('pointermove',e=>{const o=ptr.get(e.pointerId);if(!o)return;const dx=e.clientX-o.x,dy=e.clientY-o.y;o.x=e.clientX;o.y=e.clientY;
  if(ptr.size===2){const a=[...ptr.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),r=cv.getBoundingClientRect();if(pinch>0&&d>0){zoomAt(d/pinch,(a[0].x+a[1].x)/2-r.left,(a[0].y+a[1].y)/2-r.top);unfollow()}pinch=d;moved+=99;return}
- moved+=Math.abs(dx)+Math.abs(dy);if(moved>6){cx-=dx/ppm;cy+=dy/ppm;unfollow();draw()}});
+ moved+=Math.abs(dx)+Math.abs(dy);
+ if(mode===2&&curS){if(Math.hypot(e.clientX-o.sx,e.clientY-o.sy)>=2){curS.p.push(pen(e));o.sx=e.clientX;o.sy=e.clientY;sd()}return}
+ if(moved>6){cx-=dx/ppm;cy+=dy/ppm;unfollow();draw()}});
 cv.addEventListener('pointerup',e=>{const was=ptr.has(e.pointerId);ptr.delete(e.pointerId);pinch=0;
- if(was&&moved<=6&&ptr.size===0&&mode===1){if(!org){msg('আগে লাইভ লোকেশন চালু করুন — অবস্থান পেলে তবেই পয়েন্ট বসবে।');return}const r=cv.getBoundingClientRect(),S=sz(),w=s2w(e.clientX-r.left,e.clientY-r.top,S);addPt(toLL(w.x,w.y))}});
-cv.addEventListener('pointercancel',e=>{ptr.delete(e.pointerId);pinch=0});
-function setMode(m){mode=m;$('wpM0').classList.toggle('on',m===0);$('wpM1').classList.toggle('on',m===1)}
-$('wpM0').onclick=()=>setMode(0);$('wpM1').onclick=()=>setMode(mode===1?0:1);
+ if(curS){curS=null;save();draw();return}
+ if(was&&moved<=6&&ptr.size===0&&mode===1){if(!org){msg('আগে লাইভ লোকেশন চালু করুন বা "লাইভ ছাড়াই শুরু" ঘরে জায়গা দিন।');return}const r=cv.getBoundingClientRect(),S=sz(),w=s2w(e.clientX-r.left,e.clientY-r.top,S);addPt(toLL(w.x,w.y))}});
+cv.addEventListener('pointercancel',e=>{ptr.delete(e.pointerId);pinch=0;if(curS){curS=null;save()}});
+function setMode(m){mode=m;['wpM0','wpM1','wpM2'].forEach((id,i)=>$(id).classList.toggle('on',m===i));if(m===2&&!org)msg('আঁকতে হলে আগে লাইভ চালু করুন বা "লাইভ ছাড়াই শুরু" ঘরে জায়গা দিন।')}
+$('wpM0').onclick=()=>setMode(0);$('wpM1').onclick=()=>setMode(mode===1?0:1);$('wpM2').onclick=()=>setMode(mode===2?0:2);
 $('wpMHere').onclick=()=>{if(!last){msg('আগে "📍 লাইভ লোকেশন চালু করুন" চাপুন — অবস্থান পেলে এখানে পয়েন্ট বসবে।');return}addPt({lat:last.lat,lon:last.lon})};
-// points
-function addPt(q){pts.push({lat:q.lat,lon:q.lon});renderPts();draw()}
+$('wpSUndo').onclick=()=>{strokes.pop();save();draw()};
+$('wpSClear').onclick=()=>{if(strokes.length&&!confirm('সব আঁকা মুছবেন?'))return;strokes=[];save();draw()};
+// পয়েন্ট
+function addPt(q,name){const p={lat:+(+q.lat).toFixed(7),lon:+(+q.lon).toFixed(7)};if(name)p.name=name;pts.push(p);save();renderPts();draw()}
+function fillSel(){['wpIA','wpIB','wpPA','wpCA'].forEach(id=>{const s=$(id),v=s.value;s.innerHTML=pts.map((q,i)=>'<option value="'+i+'">'+(i+1)+(q.name?' '+q.name:'')+'</option>').join('');if(v!==''&&+v<pts.length)s.value=v});if(pts.length>1&&$('wpIB').value===$('wpIA').value)$('wpIB').value=1}
+function area(){if(pts.length<3||!org)return'';let a=0;const m=pts.map(q=>toXY(q.lat,q.lon));for(let i=0;i<m.length;i++){const j=(i+1)%m.length;a+=m[i].x*m[j].y-m[j].x*m[i].y}a=Math.abs(a)/2;return'পয়েন্ট ক্রমে বহুভুজের ক্ষেত্রফল: '+fx(a,2)+' বর্গমিটার = '+fx(a/40.4686,2)+' শতাংশ = '+fx(a/66.8903,2)+' কাঠা'}
 function renderPts(){
- const t=$('wpTab'),da=$('wpDA'),db=$('wpDB'),a0=da.value,b0=db.value;
- if(!pts.length){t.innerHTML='<p class="hint">এখনো কোনো পয়েন্ট নেই। 📍 চেপে পাতায় টাচ করুন, অথবা 📍＋ দিয়ে লাইভ অবস্থানে বসান।</p>';da.innerHTML=db.innerHTML='';$('wpDR').textContent='—';$('wpTot').textContent='';return}
+ const t=$('wpTab'),da=$('wpDA'),db=$('wpDB'),a0=da.value,b0=db.value;fillSel();
+ if(!pts.length){t.innerHTML='<p class="hint">এখনো কোনো পয়েন্ট নেই। 📍 চেপে পাতায় টাচ করুন, অথবা 📍＋ দিয়ে লাইভ অবস্থানে বসান।</p>';da.innerHTML=db.innerHTML='';$('wpDR').textContent='—';$('wpTot').textContent='';$('wpArea').textContent='';return}
  let h='<table><tr><th>#</th><th>অক্ষাংশ</th><th>দ্রাঘিমাংশ</th><th>আগের থেকে</th><th>আমার থেকে</th><th></th></tr>',tot=0;
- pts.forEach((q,i)=>{const dp=i?hav(pts[i-1],q):null;if(dp)tot+=dp;h+='<tr><td>'+(i+1)+'</td><td>'+fx(q.lat,6)+'</td><td>'+fx(q.lon,6)+'</td><td>'+(dp==null?'—':fd(dp))+'</td><td>'+(last?fd(hav(last,q)):'—')+'</td><td><button class="secondary" data-del="'+i+'">✕</button></td></tr>'});
- t.innerHTML=h+'</table>';t.querySelectorAll('button[data-del]').forEach(b=>b.onclick=()=>{pts.splice(+b.dataset.del,1);renderPts();draw()});
- const opts=pts.map((_,i)=>'<option value="'+i+'">'+(i+1)+'</option>').join('');da.innerHTML=db.innerHTML=opts;da.value=(a0!==''&&+a0<pts.length)?a0:0;db.value=(b0!==''&&+b0<pts.length)?b0:pts.length-1;
- $('wpTot').textContent=pts.length>1?'পয়েন্ট ধরে মোট পথ: '+fd(tot):'';dr()}
+ pts.forEach((q,i)=>{const dp=i?hav(pts[i-1],q):null;if(dp)tot+=dp;h+='<tr><td>'+(i+1)+(q.name?'<br><small>'+q.name+'</small>':'')+'</td><td>'+fx(q.lat,6)+'</td><td>'+fx(q.lon,6)+'</td><td>'+(dp==null?'—':fd(dp))+'</td><td>'+(last?fd(hav(last,q)):'—')+'</td><td><button class="secondary" data-del="'+i+'">✕</button></td></tr>'});
+ t.innerHTML=h+'</table>';t.querySelectorAll('button[data-del]').forEach(b=>b.onclick=()=>{pts.splice(+b.dataset.del,1);save();renderPts();draw()});
+ const opts=pts.map((q,i)=>'<option value="'+i+'">'+(i+1)+(q.name?' '+q.name:'')+'</option>').join('');da.innerHTML=db.innerHTML=opts;da.value=(a0!==''&&+a0<pts.length)?a0:0;db.value=(b0!==''&&+b0<pts.length)?b0:pts.length-1;
+ $('wpTot').textContent=pts.length>1?'পয়েন্ট ধরে মোট পথ: '+fd(tot):'';$('wpArea').textContent=area();dr()}
 function dr(){const a=+$('wpDA').value,b=+$('wpDB').value;if(!pts[a]||!pts[b]){$('wpDR').textContent='—';return}$('wpDR').textContent=' '+fd(hav(pts[a],pts[b]))}
 $('wpDA').onchange=dr;$('wpDB').onchange=dr;
-$('wpPUndo').onclick=()=>{pts.pop();renderPts();draw()};
-$('wpPClear').onclick=()=>{if(pts.length&&!confirm('সব পয়েন্ট মুছবেন?'))return;pts=[];renderPts();draw()};
-const csv=()=>'No,Latitude,Longitude\n'+pts.map((q,i)=>(i+1)+','+q.lat.toFixed(7)+','+q.lon.toFixed(7)).join('\n');
+$('wpPUndo').onclick=()=>{pts.pop();save();renderPts();draw()};
+$('wpPClear').onclick=()=>{if(pts.length&&!confirm('সব পয়েন্ট মুছবেন?'))return;pts=[];save();renderPts();draw()};
+const csv=()=>'No,Name,Latitude,Longitude\n'+pts.map((q,i)=>(i+1)+','+(q.name||'')+','+q.lat.toFixed(7)+','+q.lon.toFixed(7)).join('\n');
 $('wpPCopy').onclick=async()=>{if(!pts.length){msg('কোনো পয়েন্ট নেই।');return}try{await navigator.clipboard.writeText(csv());msg('CSV কপি হয়েছে।')}catch(e){prompt('কপি করুন:',csv())}};
 $('wpPDl').onclick=()=>{if(!pts.length){msg('কোনো পয়েন্ট নেই।');return}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv()],{type:'text/csv'}));a.download='white_points.csv';document.body.appendChild(a);a.click();a.remove()};
-// tab + resize
+// দুই বৃত্তের ছেদ
+$('wpIGo').onclick=()=>{const R_=$('wpIR');
+ if(pts.length<2){R_.textContent='⚠️ আগে অন্তত দুটি পয়েন্ট বসান (A ও B)।';return}
+ const ia=+$('wpIA').value,ib=+$('wpIB').value;if(ia===ib){R_.textContent='⚠️ A ও B আলাদা পয়েন্ট বাছুন।';return}
+ const u=+$('wpIU').value,da=parseFloat($('wpDa').value)*u,db=parseFloat($('wpDb').value)*u;
+ if(!(da>0&&db>0)){R_.textContent='⚠️ A ও B থেকে দূরত্ব লিখুন (০-এর বেশি)।';return}
+ const A=toXY(pts[ia].lat,pts[ia].lon),B=toXY(pts[ib].lat,pts[ib].lon),d=Math.hypot(B.x-A.x,B.y-A.y);
+ if(d<1e-6){R_.textContent='⚠️ A ও B একই জায়গায়।';return}
+ if(da+db<d-1e-9){R_.textContent='⚠️ দুই বৃত্ত মিলছে না — দূরত্বের যোগফল ('+fd(da+db).split(' (')[0]+') A–B দূরত্বের ('+fd(d).split(' (')[0]+') চেয়ে কম।';return}
+ if(Math.abs(da-db)>d+1e-9){R_.textContent='⚠️ একটি বৃত্ত অন্যটির ভেতরে — ছেদ নেই। দূরত্ব মিলিয়ে দেখুন।';return}
+ const a=(da*da-db*db+d*d)/(2*d),h=Math.sqrt(Math.max(0,da*da-a*a)),ux=(B.x-A.x)/d,uy=(B.y-A.y)/d,Px=A.x+a*ux,Py=A.y+a*uy;
+ const L={x:Px-h*uy,y:Py+h*ux},Rr={x:Px+h*uy,y:Py-h*ux},side=$('wpIS').value,out=[];
+ if(side==='both'||side==='L')out.push(['বাঁ',L]);if((side==='both'||side==='R')&&h>1e-9)out.push(['ডান',Rr]);if(side==='R'&&h<=1e-9)out.push(['স্পর্শ',Rr]);
+ const ca=circles.length;circles.push({lat:pts[ia].lat,lon:pts[ia].lon,r:da,c:'#e91e63'},{lat:pts[ib].lat,lon:pts[ib].lon,r:db,c:'#9c27b0'});
+ const nm=(pts[ia].name||(ia+1))+'-'+(pts[ib].name||(ib+1)),txt=[];
+ out.forEach(([sn,p])=>{const ll=toLL(p.x,p.y);addPt(ll,'ছেদ '+nm+' ('+sn+')');txt.push('ছেদবিন্দু ('+sn+'): '+fx(ll.lat,7)+', '+fx(ll.lon,7))});
+ R_.textContent='✅ '+txt.join(' • ');save();draw()};
+// দূরত্ব+দিক
+$('wpPGo').onclick=()=>{if(!pts.length){msg('আগে একটি পয়েন্ট বসান।');return}const i=+$('wpPA').value,d=parseFloat($('wpPd').value)*+$('wpPU').value,b=parseFloat($('wpPb').value)*RAD;if(!(d>0)||isNaN(b)){msg('⚠️ দূরত্ব ও দিক (ডিগ্রি) লিখুন।');return}
+ const A=toXY(pts[i].lat,pts[i].lon),ll=toLL(A.x+d*Math.sin(b),A.y+d*Math.cos(b));addPt(ll,'দূরত্ব-দিক থেকে');msg('✅ নতুন পয়েন্ট: '+fx(ll.lat,7)+', '+fx(ll.lon,7))};
+// বৃত্ত
+$('wpCGo').onclick=()=>{if(!pts.length){msg('আগে একটি পয়েন্ট বসান।');return}const i=+$('wpCA').value,r=parseFloat($('wpCr').value)*+$('wpCU').value;if(!(r>0)){msg('⚠️ ব্যাসার্ধ লিখুন।');return}circles.push({lat:pts[i].lat,lon:pts[i].lon,r,c:'#e91e63'});save();draw()};
+$('wpCClr').onclick=()=>{circles=[];save();draw()};
+// ট্যাব ও রিসাইজ
 document.querySelector('.tabs button[data-tab=whitepos]').addEventListener('click',()=>{setTimeout(draw,60);if(!autoTried&&wid==null){autoTried=true;setTimeout(start,150)}});
 window.addEventListener('resize',()=>{if($('whitepos').classList.contains('active'))draw()});
 if(window.ResizeObserver)new ResizeObserver(()=>{if($('whitepos').classList.contains('active'))draw()}).observe($('wpWrap'));
-renderPts();setFab();
+load();if(org)$('wpBig').style.display='none';renderPts();setFab();
 })();
 </script>
+
 
 <script>document.getElementById("gmToWhite").onclick=function(){document.querySelector(".tabs button[data-tab=whitepos]").click();window.scrollTo({top:0,behavior:"smooth"})};</script>
 </body></html>

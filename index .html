@@ -2320,7 +2320,7 @@ function onPos(p){const c=p.coords,cur={lat:c.latitude,lon:c.longitude};cnt++;bo
  if(prev){const d=hav(prev,cur);if(d>Math.max(3,(c.accuracy||0)/2))dist+=d}if(!prev||hav(prev,cur)>Math.max(3,(c.accuracy||0)/2))prev=cur;
  last={lat:cur.lat,lon:cur.lon,acc:c.accuracy,spd:c.speed,hdg:c.heading,t:p.timestamp};
  const m=toXY(cur.lat,cur.lon),tl=trail[trail.length-1];if(!tl||Math.hypot(m.x-tl.x,m.y-tl.y)>=Math.max(1,(c.accuracy||0)*.3)){trail.push(m);if(trail.length>5000)trail.shift()}
- if(follow){cx=m.x;cy=m.y}
+ if(follow||cnt===1){cx=m.x;cy=m.y}
  $('wpLat').textContent=fx(cur.lat,6);$('wpLon').textContent=fx(cur.lon,6);$('wpAcc').textContent=c.accuracy!=null?'± '+fx(c.accuracy,1)+' মিটার':'—';
  $('wpSpd').textContent=c.speed!=null&&!isNaN(c.speed)?fx(c.speed*3.6,1)+' কিমি/ঘণ্টা':'স্থির / অজানা';$('wpHdg').textContent=dirName(c.heading);
  $('wpXY').textContent=fl(m.x)+', '+fl(m.y);$('wpDist').textContent=dist<1000?fx(dist,0)+' মিটার':fx(dist/1000,2)+' কিমি';$('wpCnt').textContent=cnt+' বার';
@@ -2331,7 +2331,7 @@ function onErr(e){const m={1:(window.isSecureContext===false?'⛔ এই ফা�
  boardMsg=m[e.code]||('লোকেশন ত্রুটি: '+e.message);msg('⚠️ '+boardMsg.replace(/\n/g,' '));if(e.code===1)stop(true);else{$('wpBig').style.display='flex'}draw()}
 function begin(hi){wid=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:hi,maximumAge:hi?1000:30000,timeout:hi?15000:30000});setFab()}
 function start(){if(!navigator.geolocation){boardMsg='এই ব্রাউজারে লোকেশন সুবিধা নেই।\nChrome/Safari-তে খুলুন।';msg('⚠️ এই ব্রাউজারে লোকেশন সুবিধা নেই।');draw();return}
- if(wid!=null)return;lowAcc=false;
+ if(wid!=null)return;lowAcc=false;follow=true;try{$('wpFollow').checked=true}catch(e){}setFab();
  if(window.isSecureContext===false||location.protocol==='content:'){boardMsg='⛔ এই ফাইলটি নিরাপদ (https) ঠিকানায় খোলা হয়নি।\nসমাধান: GitHub Pages-এর https:// লিংকে খুলুন।';msg('⛔ নিরাপদ (https) ঠিকানা ছাড়া ব্রাউজার লোকেশন দেয় না — GitHub Pages-এর লিংকে খুলুন।');$('wpBig').style.display='flex';draw();return}
  if(!org)boardMsg='📡 অবস্থান খোঁজা হচ্ছে...\nঅনুমতি চাইলে "Allow" দিন।';
  msg('অবস্থান খোঁজা হচ্ছে... অনুমতি চাইলে "Allow" দিন।');$('wpBig').style.display='none';draw();
